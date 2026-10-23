@@ -1,5 +1,6 @@
 import type { ComponentType, SVGProps } from "react";
 import {
+  AiIcon,
   CssIcon,
   DeviceIcon,
   FigmaIcon,
@@ -7,11 +8,15 @@ import {
   GitHubIcon,
   HtmlIcon,
   InstagramIcon,
+  JavaScriptIcon,
   LinkedInIcon,
   MailIcon,
   MapPinIcon,
+  NextJsIcon,
+  NodeJsIcon,
   PhoneIcon,
   ReactIcon,
+  ServerIcon,
   TailwindIcon,
   TelegramIcon,
 } from "@/components/icons";
@@ -32,19 +37,22 @@ export const SOCIALS: { name: string; href: string; icon: IconType }[] = [
   { name: "Telegram", href: "https://t.me/Saha_SDR_09", icon: TelegramIcon },
 ];
 
-/* ---------- Skills — 8 ta ikonka (nomlar translations.skills.cards) ----------
-   Har bir element yo SVG ikonka, yoki rasm yo'li ({ image: ... }).
-   JavaScript kartasi uchun rasm: /public/assets/logos/icon-javscript.png */
+/* ---------- Skills — 12 ta ikonka (nomlar translations.skills.cards) ----------
+   Har bir element SVG ikonka yoki rasm yo'li ({ image: ... }). */
 export type SkillIcon = IconType | { image: string };
 
 export const SKILL_ICONS: SkillIcon[] = [
+  ReactIcon,
+  NextJsIcon,
+  NodeJsIcon,
+  AiIcon,
+  ServerIcon,
+  JavaScriptIcon,
+  TailwindIcon,
+  GitIcon,
   HtmlIcon,
   CssIcon,
-  TailwindIcon,
-  { image: "/assets/logos/icon-javscript.png" }, // JavaScript
-  ReactIcon,
   FigmaIcon,
-  GitIcon,
   DeviceIcon,
 ];
 

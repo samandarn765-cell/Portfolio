@@ -12,9 +12,9 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Samandar Nosirov — Frontend Developer",
+  title: "Samandar Nosirov — Fullstack & AI Developer",
   description:
-    "Samandar Nosirov — O'zbekistonlik IT Frontend Dizayner. React, Next.js va Tailwind CSS bilan zamonaviy veb-saytlar yarataman.",
+    "Samandar Nosirov — O'zbekistonlik Fullstack & AI Dasturchi. React, Next.js, Node.js, server tizimlari va sun'iy intellekt (AI) integratsiyasi bilan zamonaviy veb-ilovalar yarataman.",
   icons: { icon: "/assets/logos/logo_direke.png" },
 };
 

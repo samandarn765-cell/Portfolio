@@ -98,6 +98,9 @@ export const metadata: Metadata = {
     icon: "/assets/logos/logo_direke.png",
     apple: "/assets/logos/logo_direke.png",
   },
+  verification: {
+    google: "I5YL37GqEZZzTx2gIOQGHUBao6gBBJPF7BLFzPx9IUQ",
+  },
   other: {
     "geo.region": "UZ",
     "geo.placename": "Tashkent, Uzbekistan",

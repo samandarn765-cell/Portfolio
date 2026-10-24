@@ -125,11 +125,17 @@ const jsonLd = {
       url: siteUrl,
       jobTitle: "Fullstack & AI Developer",
       description:
-        "Fullstack & AI Developer specializing in Next.js, React, Node.js, and Artificial Intelligence integrations.",
+        "Fullstack & AI Developer specializing in Next.js, React, Node.js, and Artificial Intelligence integrations based in Tashkent, Uzbekistan.",
+      nationality: {
+        "@type": "Country",
+        name: "Uzbekistan",
+      },
       address: {
         "@type": "PostalAddress",
         addressCountry: "UZ",
         addressLocality: "Tashkent",
+        addressRegion: "Tashkent City",
+        postalCode: "100000",
       },
       sameAs: [
         "https://github.com/samandarn765-cell",
@@ -137,6 +143,49 @@ const jsonLd = {
         "https://instagram.com/",
         "https://linkedin.com/",
       ],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": `${siteUrl}/#service`,
+      name: "Samandar Nosirov — Fullstack & AI Developer Services",
+      url: siteUrl,
+      image: `${siteUrl}/assets/images/about-illustration.png`,
+      telephone: "+998",
+      priceRange: "$$",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "UZ",
+        addressLocality: "Tashkent",
+        addressRegion: "Tashkent City",
+        postalCode: "100000",
+      },
+      geo: {
+        "@type": "GeoCoordinates",
+        latitude: 41.2995,
+        longitude: 69.2401,
+      },
+      areaServed: [
+        {
+          "@type": "Country",
+          name: "Uzbekistan",
+        },
+        {
+          "@type": "City",
+          name: "Tashkent",
+        },
+      ],
+      knowsAbout: [
+        "Web Development",
+        "Fullstack Development",
+        "React",
+        "Next.js",
+        "Node.js",
+        "Artificial Intelligence",
+        "API Integration",
+      ],
+      provider: {
+        "@id": `${siteUrl}/#person`,
+      },
     },
     {
       "@type": "WebSite",

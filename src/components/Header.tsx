@@ -18,6 +18,23 @@ export default function Header() {
   const logoSrc = theme === "dark" ? "/assets/logos/logo_lide.png" : "/assets/logos/logo_direke.png";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState("#home");
+
+  // Highlight the nav link of the section currently in view
+  useEffect(() => {
+    const ids = t.header.nav.map((l) => l.href.slice(1));
+    const sections = ids.map((id) => document.getElementById(id)).filter((el): el is HTMLElement => !!el);
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) setActive(`#${e.target.id}`);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px" },
+    );
+    sections.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, [t.header.nav]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -77,21 +94,30 @@ export default function Header() {
         </a>
 
         {/* Desktop navigation */}
-        <nav className="hidden items-center gap-8 lg:flex" aria-label={t.header.navigationLabel}>
-          {t.header.nav.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="group relative text-sm font-medium text-neutral-600 transition-colors duration-300 hover:text-ink dark:text-neutral-300"
-            >
-              {link.label}
-              {/* underline animation */}
-              <span
-                className="absolute -bottom-1.5 left-0 h-[2px] w-full origin-left scale-x-0 bg-ink transition-transform duration-300 ease-out group-hover:scale-x-100"
-                aria-hidden="true"
-              />
-            </a>
-          ))}
+        <nav className="isolate hidden items-center gap-1 rounded-full border border-ink/10 bg-paper/60 p-1 xl:flex" aria-label={t.header.navigationLabel}>
+          {t.header.nav.map((link) => {
+            const isActive = active === link.href;
+            return (
+              <a
+                key={link.href}
+                href={link.href}
+                aria-current={isActive ? "true" : undefined}
+                className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors duration-300 ${
+                  isActive ? "text-paper" : "text-neutral-600 hover:text-ink dark:text-neutral-300"
+                }`}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 -z-10 rounded-full bg-ink"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                    aria-hidden="true"
+                  />
+                )}
+                {link.label}
+              </a>
+            );
+          })}
         </nav>
 
         {/* Theme toggle + language switcher + CTA */}
@@ -112,7 +138,7 @@ export default function Header() {
             aria-label={open ? t.header.menuClose : t.header.menuOpen}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:bg-ink hover:text-paper lg:hidden"
+            className="relative flex h-10 w-10 items-center justify-center rounded-full border border-ink/15 text-ink transition-colors hover:bg-ink hover:text-paper xl:hidden"
           >
             <AnimatePresence mode="wait" initial={false}>
               {open ? (
@@ -162,7 +188,7 @@ export default function Header() {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.35, ease: EASE }}
-            className="overflow-hidden border-t border-ink/10 bg-paper lg:hidden"
+            className="overflow-hidden border-t border-ink/10 bg-paper xl:hidden"
             aria-label={t.header.navigationLabel}
           >
             <div className="flex flex-col gap-1 px-5 py-6">

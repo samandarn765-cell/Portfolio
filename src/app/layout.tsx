@@ -1,13 +1,21 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import Script from "next/script";
-import { Poppins } from "next/font/google";
+import { Instrument_Serif, Poppins } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-poppins",
+  display: "swap",
+});
+
+const serif = Instrument_Serif({
+  subsets: ["latin", "latin-ext"],
+  weight: "400",
+  style: ["italic", "normal"],
+  variable: "--font-serif-display",
   display: "swap",
 });
 
@@ -113,7 +121,7 @@ export const metadata: Metadata = {
  * Runs before hydration to apply the saved/system theme to <html>
  * and avoid a flash of the wrong theme (FOUC).
  */
-const themeInit = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}}catch(e){}})();`;
+const themeInit = `(function(){try{var t=localStorage.getItem("theme");if(t==="dark"||(t!=="light"&&window.matchMedia("(prefers-color-scheme: dark)").matches)){document.documentElement.classList.add("dark");}}catch(e){}try{if(sessionStorage.getItem("intro-seen")){document.documentElement.classList.add("intro-seen");}}catch(e){}})();`;
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -124,6 +132,7 @@ const jsonLd = {
       name: "Samandar Nosirov",
       url: siteUrl,
       jobTitle: "Fullstack & AI Developer",
+      image: `${siteUrl}/assets/images/samandar.png`,
       description:
         "Fullstack & AI Developer specializing in Next.js, React, Node.js, and Artificial Intelligence integrations based in Tashkent, Uzbekistan.",
       nationality: {
@@ -150,7 +159,7 @@ const jsonLd = {
       name: "Samandar Nosirov — Fullstack & AI Developer Services",
       url: siteUrl,
       image: `${siteUrl}/assets/images/about-illustration.png`,
-      telephone: "+998",
+      telephone: "+998901244470",
       priceRange: "$$",
       address: {
         "@type": "PostalAddress",
@@ -202,14 +211,14 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="uz" suppressHydrationWarning className={`${poppins.variable} h-full antialiased`}>
+    <html lang="uz" suppressHydrationWarning className={`${poppins.variable} ${serif.variable} h-full antialiased`}>
       <head>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body className="flex min-h-full flex-col bg-paper font-sans text-ink">
+      <body className="grain flex min-h-full flex-col bg-paper font-sans text-ink">
         <Script id="theme-init" strategy="beforeInteractive" dangerouslySetInnerHTML={{ __html: themeInit }} />
         {children}
       </body>

@@ -80,6 +80,8 @@ export default function Contact() {
   const [values, setValues] = useState<FormValues>(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "success">("idle");
+  const [sendError, setSendError] = useState<string | null>(null);
+  const [honeypot, setHoneypot] = useState("");
 
   const validate = buildValidator(t.contact.form.errors);
 
@@ -92,18 +94,43 @@ export default function Contact() {
     }
   };
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const nextErrors = validate(values);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
     setStatus("sending");
-    // Simulated send — bu yerga o'zingizning backend/email API'ni ulashing
-    window.setTimeout(() => {
-      setStatus("success");
-      setValues(initialValues);
-    }, 1200);
+    setSendError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...values, company: honeypot }),
+      });
+      if (res.ok) {
+        setStatus("success");
+        setValues(initialValues);
+        return;
+      }
+      if (res.status === 429) {
+        setSendError(t.contact.form.errors.rateLimited);
+        setStatus("idle");
+        return;
+      }
+      throw new Error(String(res.status));
+    } catch {
+      // Server sozlanmagan yoki tarmoq xatosi — email ilovasini ochamiz
+      const emailHref = t.contact.info.find((i) => i.key === "email")?.href ?? "mailto:";
+      const subject = encodeURIComponent(`Portfolio — ${values.name}`);
+      const signature = [`— ${values.name} (${values.email})`, values.website].filter(Boolean).join("\n");
+      const bodyText = encodeURIComponent(`${values.message}\n\n${signature}`);
+      const link = document.createElement("a");
+      link.href = `${emailHref}?subject=${subject}&body=${bodyText}`;
+      link.click();
+      setSendError(t.contact.form.errors.sendFailed);
+      setStatus("idle");
+    }
   };
 
   const form = t.contact.form;
@@ -134,7 +161,7 @@ export default function Contact() {
                 const Icon = CONTACT_ICONS[info.key];
                 return (
                   <a key={info.key} href={info.href} className="group flex items-center gap-4">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/15 text-white/80 transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-ink">
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center border border-white/15 text-white/80 transition-all duration-300 group-hover:border-white group-hover:bg-white group-hover:text-black">
                       <Icon className="h-5 w-5" />
                     </span>
                     <span>
@@ -166,7 +193,7 @@ export default function Contact() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.name}
-                  className="flex h-11 w-11 items-center justify-center border border-white/15 text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-ink"
+                  className="flex h-11 w-11 items-center justify-center border border-white/15 text-white/70 transition-all duration-300 hover:-translate-y-1 hover:border-white hover:bg-white hover:text-black"
                 >
                   <social.icon className="h-4.5 w-4.5" />
                 </a>
@@ -176,7 +203,8 @@ export default function Contact() {
         </div>
 
         {/* ---------- Right: white form card ---------- */}
-        <Reveal delay={0.15}>                <div className="rounded-2xl bg-paper p-6 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] dark:border dark:border-white/10 md:p-9">
+        <Reveal delay={0.15}>
+          <div className="rounded-3xl bg-paper p-6 text-ink shadow-[0_30px_80px_rgba(0,0,0,0.35)] dark:border dark:border-white/10 md:p-9">
             <AnimatePresence mode="wait">
               {status === "success" ? (
                 <motion.div
@@ -285,6 +313,20 @@ export default function Contact() {
                     />
                     <FieldError message={errors.message} />
                   </div>
+
+                  {/* honeypot — real users never see or fill this */}
+                  <input
+                    type="text"
+                    name="company"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={honeypot}
+                    onChange={(e) => setHoneypot(e.target.value)}
+                    className="hidden"
+                    aria-hidden="true"
+                  />
+
+                  <FieldError message={sendError ?? undefined} />
 
                   <motion.button
                     type="submit"

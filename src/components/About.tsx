@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import Counter from "./fx/Counter";
 
 export default function About() {
   const { t } = useLanguage();
@@ -15,21 +16,21 @@ export default function About() {
         <Reveal>
           <div className="relative">
             {/* offset frame */}
-            <div className="absolute -left-4 -top-4 h-full w-full border border-ink/15" aria-hidden="true" />
-            <div className="relative overflow-hidden border border-ink">
+            <div className="absolute -left-4 -top-4 h-full w-full rounded-3xl border border-ink/15" aria-hidden="true" />
+            <div className="group relative overflow-hidden rounded-3xl border border-ink">
               {/* Illyustratsiya: /public/assets/images/about-illustration.png */}
               <Image
                 src="/assets/images/about-illustration.png"
                 alt={t.about.imageAlt}
                 width={530}
                 height={572}
-                className="h-auto w-full"
+                className="h-auto w-full transition-transform duration-[1.2s] ease-out group-hover:scale-105"
               />
             </div>
             {/* floating badge */}
-            <div className="absolute -bottom-6 right-4 bg-ink px-5 py-4 text-paper shadow-[0_16px_40px_rgba(10,10,10,0.25)]">
-              <p className="text-3xl font-extrabold leading-none">1+</p>
-              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">
+            <div className="absolute -bottom-6 right-4 rounded-2xl bg-ink px-5 py-4 text-paper shadow-[0_16px_40px_rgba(10,10,10,0.25)]">
+              <p className="text-3xl font-extrabold leading-none"><Counter value="1+" /></p>
+              <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-paper/60">
                 {t.about.badgeLabel}
               </p>
             </div>
@@ -46,10 +47,10 @@ export default function About() {
           </div>
 
           {/* stats */}
-          <div className="mt-10 grid grid-cols-2 gap-px border border-ink/15 bg-ink/15 sm:grid-cols-4">
+          <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-ink/15 bg-ink/15 sm:grid-cols-4">
             {t.about.stats.map((stat) => (
               <div key={stat.label} className="bg-paper p-4 text-center transition-colors duration-300 hover:bg-mist">
-                <p className="text-2xl font-extrabold text-ink md:text-3xl">{stat.value}</p>
+                <p className="text-2xl font-extrabold text-ink md:text-3xl"><Counter value={stat.value} /></p>
                 <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
                   {stat.label}
                 </p>

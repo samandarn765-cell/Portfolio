@@ -6,6 +6,7 @@ import { SKILL_ICONS, type SkillIcon } from "@/data/site";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import Reveal from "./Reveal";
 import SectionHeading from "./SectionHeading";
+import Spotlight from "./fx/Spotlight";
 
 function SkillGlyph({ icon, name }: { icon: SkillIcon; name: string }) {
   if (typeof icon === "object") {
@@ -60,17 +61,16 @@ export default function Skills() {
           className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-5"
         >
           {SKILL_ICONS.map((icon, i) => (
-            <motion.div
-              key={i}
-              variants={cardItem}
-              whileHover={{ y: -6 }}
-              whileTap={{ scale: 0.97 }}
-              className="group flex aspect-square flex-col items-center justify-center gap-5 border border-ink bg-paper transition-colors duration-300 hover:bg-ink"
-            >
-              <SkillGlyph icon={icon} name={t.skills.cards[i]} />
-              <span className="px-2 text-center text-sm font-semibold text-ink transition-colors duration-300 group-hover:text-paper md:text-base">
-                {t.skills.cards[i]}
-              </span>
+            <motion.div key={i} variants={cardItem} whileHover={{ y: -6 }} whileTap={{ scale: 0.97 }}>
+              <Spotlight className="[--spot:var(--paper)] [--spot-strength:16%] group relative flex aspect-square flex-col items-center justify-center gap-5 overflow-hidden rounded-2xl border border-ink/15 bg-paper transition-colors duration-500 hover:border-ink hover:bg-ink">
+                <span className="absolute left-4 top-3.5 text-[11px] font-semibold tabular-nums text-neutral-400 transition-colors duration-500 group-hover:text-white/40">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <SkillGlyph icon={icon} name={t.skills.cards[i]} />
+                <span className="px-2 text-center text-sm font-semibold text-ink transition-colors duration-300 group-hover:text-paper md:text-base">
+                  {t.skills.cards[i]}
+                </span>
+              </Spotlight>
             </motion.div>
           ))}
         </motion.div>
